@@ -1,15 +1,11 @@
 
 import StickyCTA from '@/components/StickyCTA';
 import Script from 'next/script';
+import { getProductBySlug } from '@/lib/mockData';
 
 
-async function getProduct(slug: string) {
-    // Static content generation requires data fetching during build or run
-    const res = await fetch(`http://localhost:5000/api/products/detail/${slug}`, { cache: 'no-store' });
-    if (!res.ok) {
-        return null;
-    }
-    return res.json();
+function getProduct(slug: string) {
+    return getProductBySlug(slug);
 }
 
 export default async function ReviewPage({ params }: { params: { slug: string } }) {
@@ -55,8 +51,9 @@ export default async function ReviewPage({ params }: { params: { slug: string } 
                         <div className="text-yellow-400 text-2xl">★★★★★</div>
                     </div>
                     <a
-                        href={`http://localhost:5000/api/track-click?product_id=${product.id}`}
+                        href={product.affiliate_link_base}
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-block px-8 py-4 bg-primary text-white font-bold text-lg rounded-xl hover:bg-blue-600 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                     >
                         Visit Official Website
@@ -119,7 +116,7 @@ export default async function ReviewPage({ params }: { params: { slug: string } 
             </div>
 
             <StickyCTA
-                link={`http://localhost:5000/api/track-click?product_id=${product.id}`}
+                link={product.affiliate_link_base}
                 price={`$${product.price_low}/mo`}
             />
         </div>
